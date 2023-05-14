@@ -2,18 +2,19 @@ import { closeMainWindow, popToRoot, showHUD } from "@raycast/api";
 import dayjs from "dayjs";
 
 const enum ReplaceFlags {
-	// get the current date in the format specified if has format
-	DATE = "date",
-	// get the selected text
-	SELECTED = "selected"
+  // get the current date in the format specified if has format
+  DATE = "date",
+  // get the selected text
+  SELECTED = "selected",
+  // get the clipboard content
+  CLIPBOARD = "clipboard",
 }
 
 type ReplaceSwitch = {
   [key: string]: (match: string) => string;
-}
+};
 
-
-export function fillPrompt(prompt: string, selected: string|null) {
+export function fillPrompt(prompt: string, selected: string | null, clipboard: string | null) {
   const replaceSwitch: ReplaceSwitch = {
     [ReplaceFlags.DATE]: (match) => {
       const format = match.split(":")[1];
@@ -23,13 +24,24 @@ export function fillPrompt(prompt: string, selected: string|null) {
     },
     [ReplaceFlags.SELECTED]: () => {
       if (!selected) {
-        showHUD("Get selected failed 💩")
-        closeMainWindow()
-        popToRoot()
+        showHUD("Get selected failed 💩");
+        closeMainWindow();
+        popToRoot();
 
-        return ""
+        return "";
       } else {
-        return selected
+        return selected;
+      }
+    },
+    [ReplaceFlags.CLIPBOARD]: () => {
+      if (!clipboard) {
+        showHUD("Get clipboard failed 💩");
+        closeMainWindow();
+        popToRoot();
+
+        return "";
+      } else {
+        return clipboard;
       }
     },
   };
@@ -44,7 +56,7 @@ export function fillPrompt(prompt: string, selected: string|null) {
 
   const prompted = compiled(prompt);
 
-  console.log(prompted)
+  console.log(prompted);
 
-  return prompted
+  return prompted;
 }

@@ -37,34 +37,45 @@ async function handleDelete(name: string) {
 
 async function handleAI(prompt: Prompt) {
   let selected = null;
+  let clipboard = null;
   try {
+    // get selected
     selected = await getSelectedText();
-    console.log(selected)
+
+    // get clipboard
+    const { text } = await Clipboard.read();
+    clipboard = text;
     // eslint-disable-next-line no-empty
   } catch (err) {}
 
-  const answer = await AI.ask(fillPrompt(prompt.prompt, selected));
+  const answer = await AI.ask(fillPrompt(prompt.prompt, selected, clipboard));
 
-  return answer
+  return answer;
 }
 
-function ShowResult(props: {prompt: Prompt}) {
-  const [answer, setAnswer] = useState("")
-  const [isLoading, setIsLoading] = useState(true)
+function ShowResult(props: { prompt: Prompt }) {
+  const [answer, setAnswer] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    (async ()=> {
-      setAnswer(await handleAI(props.prompt))
+    (async () => {
+      setAnswer(await handleAI(props.prompt));
 
-      setIsLoading(false)
-    })()
-  }, [])
+      setIsLoading(false);
+    })();
+  }, []);
 
-  return <Detail isLoading={isLoading} markdown={answer} actions={
-    <ActionPanel>
-      <Action.CopyToClipboard content={answer}/>
-    </ActionPanel>
-  }/>;
+  return (
+    <Detail
+      isLoading={isLoading}
+      markdown={answer}
+      actions={
+        <ActionPanel>
+          <Action.CopyToClipboard content={answer} />
+        </ActionPanel>
+      }
+    />
+  );
 }
 
 export default function Command() {

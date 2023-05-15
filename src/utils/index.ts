@@ -1,1 +1,1 @@
-export * from "./fillPrompt"
+export * from "./fillPrompt";

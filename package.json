@@ -1,7 +1,7 @@
 {
   "$schema": "https://www.raycast.com/schemas/extension.json",
   "name": "prompts-station",
-  "title": "Prompts station",
+  "title": "Prompts Station",
   "description": "Save prompts localy and run quickly",
   "icon": "command-icon.png",
   "author": "Fatpandac",
@@ -13,13 +13,13 @@
   "commands": [
     {
       "name": "index",
-      "title": "Run prompt",
+      "title": "Run Prompt",
       "description": "Run your local prompt",
       "mode": "view"
     },
     {
       "name": "createPrompts",
-      "title": "Create prompt",
+      "title": "Create Prompt",
       "description": "Create your local prompt",
       "mode": "view"
     }

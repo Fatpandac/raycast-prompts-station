@@ -56,7 +56,5 @@ export function fillPrompt(prompt: string, selected: string | null, clipboard: s
 
   const prompted = compiled(prompt);
 
-  console.log(prompted);
-
   return prompted;
 }

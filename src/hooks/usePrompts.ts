@@ -1,31 +1,30 @@
-import { LocalStorage, Toast, showToast } from "@raycast/api";
+import { Toast, showToast } from "@raycast/api";
 import { useEffect, useState } from "react";
+import { getPrompts } from "../utils/storage";
 
 export type Prompt = {
-  name: string,
-  prompt: string,
-  isPaste: boolean,
-  showView: boolean
+  name: string;
+  prompt: string;
+  isPaste: boolean;
+  showView: boolean;
 };
 
 export function usePrompts() {
-  const [ prompts, setPrompts ] = useState<Prompt[]>([]);
-  const [ isLoading, setIsLoading ] = useState(true);
+  const [prompts, setPrompts] = useState<Prompt[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
       try {
-        const result = (await LocalStorage.getItem<string>("prompts")) ?? '[{"a":"hello"}]';
-        const prompts = JSON.parse(result)
+        const prompts = await getPrompts();
 
-        setPrompts(prompts)
-        setIsLoading(false)
+        setPrompts(prompts);
+        setIsLoading(false);
       } catch (err) {
-        console.log(err)
-        showToast(Toast.Style.Failure, "Get prompts faile")
+        showToast(Toast.Style.Failure, "Get prompts faile");
       }
     })();
   }, []);
 
-  return {prompts, isLoading}
+  return { prompts, isLoading };
 }

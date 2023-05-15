@@ -17,6 +17,7 @@ import {
 import { Prompt, usePrompts } from "./hooks";
 import { fillPrompt } from "./utils";
 import { useEffect, useState } from "react";
+import { FormPrompt } from "./components";
 
 async function handleDelete(name: string) {
   showToast({ style: Toast.Style.Animated, title: "Delete prompt..." });
@@ -78,6 +79,10 @@ function ShowResult(props: { prompt: Prompt }) {
   );
 }
 
+function EditView(props: { prompt: Prompt }) {
+  return <FormPrompt prompt={props.prompt} />;
+}
+
 export default function Command() {
   const { prompts, isLoading } = usePrompts();
 
@@ -128,6 +133,7 @@ export default function Command() {
                   }}
                 />
               )}
+              <Action.Push icon={Icon.Pencil} title="Edit Prompt" target={<EditView prompt={item} />} />
               <Action icon={Icon.Trash} title="Delete Prompt" onAction={() => handleDelete(item.name)} />
             </ActionPanel>
           }

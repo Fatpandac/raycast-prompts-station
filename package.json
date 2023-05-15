@@ -12,7 +12,7 @@
   "license": "MIT",
   "commands": [
     {
-      "name": "index",
+      "name": "runPrompts",
       "title": "Run Prompt",
       "description": "Run your local prompt",
       "mode": "view"

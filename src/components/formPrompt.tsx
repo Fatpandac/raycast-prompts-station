@@ -3,6 +3,26 @@ import { Prompt, usePrompts } from "../hooks";
 import { useState } from "react";
 import { savePrompts } from "../utils/storage";
 
+function PropertiesFormDropdown(props: { propmt?: Prompt }) {
+  const models = ["gpt-3.5-turbo", "text-davinci-003"];
+  const creativity = ["maximum", "none", "low", "medium", "high"];
+
+  return (
+    <>
+      <Form.Dropdown id="model" title="Choose Model" defaultValue={props.propmt?.model ?? models[0]}>
+        {models.map((item) => (
+          <Form.Dropdown.Item value={item} title={item} />
+        ))}
+      </Form.Dropdown>
+      <Form.Dropdown id="creativity" title="Creativity" defaultValue={props.propmt?.creativity ?? creativity[0]}>
+        {creativity.map((item) => (
+          <Form.Dropdown.Item value={item} title={item} />
+        ))}
+      </Form.Dropdown>
+    </>
+  );
+}
+
 export function FormPrompt(props: { prompt?: Prompt }) {
   const [nameError, setNameError] = useState<string | undefined>();
   const { prompts, isLoading } = usePrompts();
@@ -48,6 +68,7 @@ export function FormPrompt(props: { prompt?: Prompt }) {
             defaultValue={props.prompt.prompt}
           />
           <Form.Separator />
+          <PropertiesFormDropdown propmt={props.prompt} />
           <Form.Checkbox
             id="isPaste"
             title="Paste to cursor"
@@ -67,6 +88,7 @@ export function FormPrompt(props: { prompt?: Prompt }) {
           <Form.TextField id="name" title="Name" error={nameError} />
           <Form.TextArea id="prompt" title="prompt" placeholder="Input prompt here" />
           <Form.Separator />
+          <PropertiesFormDropdown />
           <Form.Checkbox
             id="isPaste"
             title="Paste to cursor"

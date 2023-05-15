@@ -49,7 +49,10 @@ async function handleAI(prompt: Prompt) {
     // eslint-disable-next-line no-empty
   } catch (err) {}
 
-  const answer = await AI.ask(fillPrompt(prompt.prompt, selected, clipboard));
+  const answer = await AI.ask(fillPrompt(prompt.prompt, selected, clipboard), {
+    model: prompt.model,
+    creativity: prompt.creativity,
+  });
 
   return answer;
 }
@@ -99,13 +102,15 @@ export default function Command() {
                   <List.Item.Detail.Metadata.Label
                     icon={Icon.TextCursor}
                     title="Paste to cursor"
-                    text={`${item.isPaste ?? false}`}
+                    text={`${item.isPaste}`}
                   />
                   <List.Item.Detail.Metadata.Label
                     icon={Icon.AppWindow}
                     title="Show result in view"
-                    text={`${item.showView ?? false}`}
+                    text={`${item.showView}`}
                   />
+                  <List.Item.Detail.Metadata.Label icon={Icon.AppWindowGrid3x3} title="Model" text={`${item.model}`} />
+                  <List.Item.Detail.Metadata.Label icon={Icon.Wand} title="Creativity" text={`${item.creativity}`} />
                 </List.Item.Detail.Metadata>
               }
             />

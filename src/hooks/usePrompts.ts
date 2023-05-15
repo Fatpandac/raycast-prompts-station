@@ -2,11 +2,16 @@ import { Toast, showToast } from "@raycast/api";
 import { useEffect, useState } from "react";
 import { getPrompts } from "../utils/storage";
 
+type Model = "text-davinci-003" | "gpt-3.5-turbo";
+type Creativity = "none" | "low" | "medium" | "high" | "maximum";
+
 export type Prompt = {
   name: string;
+  model: Model;
   prompt: string;
   isPaste: boolean;
   showView: boolean;
+  creativity: Creativity;
 };
 
 export function usePrompts() {

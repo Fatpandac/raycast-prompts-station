@@ -9,15 +9,16 @@ import {
   showToast,
   Toast,
   Icon,
-  AI,
   Clipboard,
   getSelectedText,
   Detail,
+  AI,
 } from "@raycast/api";
 import { Prompt, usePrompts } from "./hooks";
 import { fillPrompt } from "./utils";
 import { useEffect, useState } from "react";
 import { FormPrompt } from "./components";
+import { useAI } from "@raycast/utils";
 
 async function handleDelete(name: string) {
   showToast({ style: Toast.Style.Animated, title: "Delete prompt..." });
@@ -36,7 +37,7 @@ async function handleDelete(name: string) {
   popToRoot();
 }
 
-async function handleAI(prompt: Prompt) {
+async function compilePrompt(prompt: Prompt) {
   let selected = null;
   let clipboard = null;
   try {
@@ -49,33 +50,32 @@ async function handleAI(prompt: Prompt) {
     // eslint-disable-next-line no-empty
   } catch (err) {}
 
-  const answer = await AI.ask(fillPrompt(prompt.prompt, selected, clipboard), {
-    model: prompt.model,
-    creativity: prompt.creativity,
-  });
-
-  return answer;
+  return fillPrompt(prompt.prompt, selected, clipboard);
 }
 
 function ShowResult(props: { prompt: Prompt }) {
-  const [answer, setAnswer] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [compliedPrompt, setCompliedPrompt] = useState("");
   useEffect(() => {
     (async () => {
-      setAnswer(await handleAI(props.prompt));
-
-      setIsLoading(false);
+      setCompliedPrompt(await compilePrompt(props.prompt));
     })();
   }, []);
+
+  const { isLoading, data, error } = useAI(compliedPrompt, {
+    model: props.prompt.model,
+    creativity: props.prompt.creativity,
+    stream: true,
+  });
+
+  if (error) throw error;
 
   return (
     <Detail
       isLoading={isLoading}
-      markdown={answer}
+      markdown={data}
       actions={
         <ActionPanel>
-          <Action.CopyToClipboard content={answer} />
+          <Action.CopyToClipboard content={data} />
         </ActionPanel>
       }
     />
@@ -124,7 +124,12 @@ export default function Command() {
                   icon={Icon.Rocket}
                   title="Run Prompt"
                   onAction={async () => {
-                    const answer = await handleAI(item);
+                    const compliedPrompt = await compilePrompt(item);
+
+                    const answer = await AI.ask(compliedPrompt, {
+                      model: item.model,
+                      creativity: item.creativity,
+                    });
 
                     if (item.isPaste) {
                       await Clipboard.paste(answer);

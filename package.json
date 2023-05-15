@@ -26,6 +26,7 @@
   ],
   "dependencies": {
     "@raycast/api": "^1.51.1",
+    "@raycast/utils": "^1.6.1",
     "dayjs": "^1.11.7"
   },
   "devDependencies": {
